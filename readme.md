@@ -20,8 +20,8 @@ Go to the release tab, and grab the latest version.
 Then drag a .sm file onto the exe and it'll pop out two files for ya!
 
 ```bash
-SmToFnF.exe - Convert Stepmania files to Friday Night Funkin' files
-    Usage: SmToFnf.exe <input file> [output file]
+SmToFnF.exe - Convert Stepmania files to Friday Night Funkin\' files
+    "Usage: SmToFnf.exe <input file> [output file]"
 ```
 
 ## Compile
