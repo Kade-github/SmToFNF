@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmToFNF", "SmToFNF\SmToFNF.csproj", "{47114487-4E80-4556-9ABF-051E174556ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMParser", "SMParser\SMParser\SMParser.csproj", "{91CC7FF6-2696-4E12-898E-4B28775B1C92}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{47114487-4E80-4556-9ABF-051E174556ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47114487-4E80-4556-9ABF-051E174556ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47114487-4E80-4556-9ABF-051E174556ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47114487-4E80-4556-9ABF-051E174556ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91CC7FF6-2696-4E12-898E-4B28775B1C92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91CC7FF6-2696-4E12-898E-4B28775B1C92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91CC7FF6-2696-4E12-898E-4B28775B1C92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91CC7FF6-2696-4E12-898E-4B28775B1C92}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
