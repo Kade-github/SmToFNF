@@ -9,7 +9,7 @@ namespace SmToFnF
     {
         public static void PrintArgs()
         {
-            Console.WriteLine("SmToFnF.exe - Convert Stepmania files to Friday Night Funkin' files\n    Usage: SmToFnf.exe <input file> [output file]");
+            Console.WriteLine("SmToFnF.exe - Convert Stepmania files to Friday Night Funkin' files\n    Usage: SmToFnf.exe <input file>");
             Console.Read();
         }
         
@@ -26,7 +26,7 @@ namespace SmToFnF
             Environment.CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
             var inputPath = args[0];
-            var outputPath = args.Length > 1 ? args[1] : null;
+            string? outputPath = null;
             var outputName = "";
 
             if (outputPath != null)
