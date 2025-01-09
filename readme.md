@@ -10,7 +10,7 @@ Chart Version: **v2.0.0**
 
 - BPM Changes
 - Mines/Fakes (will add custom note type, you must implement it yourself in game tho, sorry)
-- Automatic camera focus
+- Automatic camera focus (kind of jank)
 - Conversion of every important atribute in the file!
 
 ## How to use
