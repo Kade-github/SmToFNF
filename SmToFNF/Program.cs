@@ -193,6 +193,7 @@ namespace SmToFnF
                     var focusEvent = new Event();
                     focusEvent.t = 0;
                     focusEvent.e = "FocusCamera";
+                    focusEvent.v = new Dictionary<string, int>();
                     focusEvent.v.Add("char", 1);
                     focusEvent.v.Add("duration", 4);
                 
