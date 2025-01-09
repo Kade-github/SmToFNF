@@ -226,15 +226,15 @@ namespace SmToFnF
                         {
                             // compare the beats of the first notes
                             
-                            if (firstOPNote.Value.beat < firstBFNote.Value.beat)
-                            {
-                                // switch focus to opponent
-                                currentFocus = 0;
-                            }
-                            else
+                            if (firstBFNote.Value.beat < firstOPNote.Value.beat)
                             {
                                 // switch focus to bf
                                 currentFocus = 1;
+                            }
+                            else
+                            {
+                                // switch focus to opponent
+                                currentFocus = 0;
                             }
                         }
                         else if (firstOPNote.HasValue)
