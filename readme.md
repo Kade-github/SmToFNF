@@ -15,6 +15,16 @@ Chart Version: **v2.0.0**
 
 ## How to use
 
+### SM File setup
+
+The file must contain a difficulty called, "Hard", "Normal", or "Easy." (normal in arrow vortex has to be hand written in the .sm file)
+
+I did this because I dunno, I wanted to. fuck you.
+
+Anyways it will only convert these diffs and skip the rest. <3 <3
+
+### The thing
+
 Go to the release tab, and grab the latest version.
 
 Then drag a .sm file onto the exe and it'll pop out two files for ya!
