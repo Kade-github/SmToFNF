@@ -9,6 +9,8 @@ Chart Version: **v2.0.0**
 ### The pitch
 
 https://github.com/user-attachments/assets/b195bb8a-2d78-469b-a7d4-5f07bb1249ff
+
+
 (no shade to any of the repo's here, its all just for fun. You guys are awesome <3 <3)
 
 # Support
