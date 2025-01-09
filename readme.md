@@ -31,7 +31,7 @@ Then drag a .sm file onto the exe and it'll pop out two files for ya!
 
 ```bash
 SmToFnF.exe - Convert Stepmania files to Friday Night Funkin files
-    "Usage: SmToFnf.exe <input file> [output file]"
+    "Usage: SmToFnf.exe <input file>"
 ```
 
 ## Compile
