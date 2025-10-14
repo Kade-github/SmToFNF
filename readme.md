@@ -25,9 +25,7 @@ https://github.com/user-attachments/assets/b195bb8a-2d78-469b-a7d4-5f07bb1249ff
 
 ### SM File setup
 
-The file must contain a difficulty called, "Hard", "Normal", or "Easy." (normal in arrow vortex has to be hand written in the .sm file)
-
-I did this because I dunno, I wanted to. fuck you.
+The file must contain a difficulty called, "Hard", "Normal/Medium", or "Easy."
 
 Anyways it will only convert these diffs and skip the rest. <3 <3
 
