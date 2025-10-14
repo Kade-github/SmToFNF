@@ -108,12 +108,22 @@ namespace SmToFnF
             {
                 string d = diff.name.ToLower();
                 
-                if (d != "hard" && d != "normal" && d  != "easy" && d != "erect")
+                if (d != "hard" && d != "medium" && d  != "easy" && d != "challenge" && d != "edit")
                 {
                     Console.WriteLine($"Skipping difficulty {diff.name}. Not correct difficulty name.");
                     continue;
                 }
-                
+
+                if (d == "medium")
+                    d = "normal";
+
+                d = d switch
+                {
+                    "challenge" => "erect",
+                    "edit" => "nightmare",
+                    _ => d
+                };
+
                 fnfSong.scrollSpeed.Add(d, 1.6f);
                 fnfMetadata.playData.difficulties.Add(d);
                 fnfMetadata.playData.ratings.Add(d, 1);
@@ -176,7 +186,7 @@ namespace SmToFnF
                             fnfNote.k = "mine";
                             break;
                         default:
-                            fnfNote.k = "normal";
+                            fnfNote.k = "";
                             break;
                     }
                     fnfNote.l = 0;
@@ -201,23 +211,24 @@ namespace SmToFnF
                 }
                 else
                 {
-                    // every 4 beats, switch camera focus ONLY if each player has notes.
-
-                    int lengthOfFourthBeats = (int)(diff.notes.Last().beat / 4);
+                    // every 8 beats, switch camera focus ONLY if each player has notes.
 
                     int lastFocus = -1;
                     int currentFocus = -1;
                     
-                    for(int i = 0; i < lengthOfFourthBeats; i++)
+                    for(int i = 0; i < diff.notes.Last().beat; i++)
                     {
-                        float beat = 4 * i;
+                        float beat = i;
+                        
+                        if (beat % 8 != 0)
+                            continue;
                         
                         Event e = new Event();
                         e.e = "FocusCamera";
                         e.t = Timing.GetTimeFromBeat(beat, ref smFile);
                         
                         // check if each player has notes in the next 8 beats
-                        List<SMNote> notesInSegment = diff.notes.FindAll(n => n.beat >= beat && n.beat < beat + 8);
+                        List<SMNote> notesInSegment = diff.notes.FindAll(n => n.beat >= beat && n.beat < beat + 4);
                         if (notesInSegment.Count == 0)
                             continue;
 
@@ -257,9 +268,9 @@ namespace SmToFnF
 
                         if (currentFocus != lastFocus)
                         {
-                            e.v = new Dictionary<string, int>();
-                            e.v.Add("char", currentFocus);
-                            e.v.Add("duration", 4);
+                            e.v = new Dictionary<string, string>();
+                            e.v.Add("char", currentFocus.ToString());
+                            e.v.Add("ease", "CLASSIC");
                             
                             lastFocus = currentFocus;
                             fnfSong.events.Add(e);
