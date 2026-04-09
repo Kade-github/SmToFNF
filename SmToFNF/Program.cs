@@ -9,7 +9,7 @@ namespace SmToFnF
     {
         public static void PrintArgs()
         {
-            Console.WriteLine("SmToFnF.exe - Convert Stepmania files to Friday Night Funkin' files\n    Usage: SmToFnf.exe <input file>");
+            Console.WriteLine("SmToFnF.exe - Convert Stepmania files to and from Friday Night Funkin' files\n    Usage: SmToFnf.exe <input file/input directory>\n    If the input is a .sm file, it will be converted to FNF format. If the input is a directory containing -metadata.json and -chart.json files, it will be converted to .sm format.\n    The output files will be saved in the same directory as the input file/directory with the same name as the input file/directory.");
             Console.Read();
         }
 

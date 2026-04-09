@@ -38,8 +38,10 @@ Go to the release tab, and grab the latest version.
 Then drag a .sm file onto the exe and it'll pop out two files for ya!
 
 ```bash
-SmToFnF.exe - Convert Stepmania files to Friday Night Funkin files
-    "Usage: SmToFnf.exe <input file>"
+SmToFnF.exe - Convert Stepmania files to and from Friday Night Funkin' files
+    Usage: SmToFnf.exe <input file/input directory>
+    If the input is a .sm file, it will be converted to FNF format. If the input is a directory containing -metadata.json and -chart.json files, it will be converted to .sm format.
+    The output files will be saved in the same directory as the input file/directory with the same name as the input file/directory.
 ```
 
 ## Compile
