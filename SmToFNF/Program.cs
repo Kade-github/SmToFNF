@@ -12,29 +12,9 @@ namespace SmToFnF
             Console.WriteLine("SmToFnF.exe - Convert Stepmania files to Friday Night Funkin' files\n    Usage: SmToFnf.exe <input file>");
             Console.Read();
         }
-        
-        public static void Main(string[] args)
+
+        public static void ToFNF(string inputPath, string outputName, string ?outputPath)
         {
-            if (args.Length < 1)
-            {
-                PrintArgs();
-                return;
-            }
-            
-            // set the current directory to the directory of the executable
-            
-            Environment.CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
-
-            var inputPath = args[0];
-            string? outputPath = null;
-            var outputName = "";
-
-            if (outputPath != null)
-            {
-                // sanatize it
-                outputName = Path.GetFileNameWithoutExtension(outputPath);
-                outputPath = Path.GetDirectoryName(outputPath);
-            }
             
             var smFile = new SMFile(inputPath);
             
@@ -319,6 +299,192 @@ namespace SmToFnF
                 
                 File.WriteAllText(outputName.ToLower() + "-metadata.json", metadataJson);
                 File.WriteAllText(outputName.ToLower() + "-chart.json", songJson);
+            }
+        }
+        
+        public static float getBeat(float s, List<SMTimingPoint> timingPoints)
+        {
+            float beat = 0;
+            foreach (var timingPoint in timingPoints)
+            {
+                if (s < timingPoint.startTime)
+                    break;
+                beat = timingPoint.startBeat + (s - timingPoint.startTime) * (timingPoint.bpm / 60);
+            }
+            return beat;
+        }
+        
+        public static float SnapBeatToGrid(float beat, int subdivisions = 192)
+        {
+            float snapped = MathF.Round(beat * subdivisions) / subdivisions;
+            return snapped;
+        }
+        
+        public static void ToSM(string inputPath, string outputName, string? outputPath)
+        {
+            var files = Array.Empty<string>();
+            try
+            {
+                files = Directory.GetFiles(Path.GetDirectoryName(inputPath) ?? "", "*.json");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error reading directory: {e.Message}");
+                Console.Read();
+                return;
+            }
+
+            string? metadataPath = null;
+            string? chartPath = null;
+            foreach (var file in files)
+            {
+                if (file.EndsWith("-metadata.json", StringComparison.OrdinalIgnoreCase))
+                    metadataPath = file;
+                else if (file.EndsWith("-chart.json", StringComparison.OrdinalIgnoreCase))
+                    chartPath = file;
+            }
+            
+            if (metadataPath == null || chartPath == null)
+            {
+                Console.WriteLine("Could not find metadata or chart JSON files. Make sure they are in the same directory as the input file and have the correct naming convention.");
+                Console.Read();
+                return;
+            }
+            
+            var metadataJson = File.ReadAllText(metadataPath);
+            var chartJson = File.ReadAllText(chartPath);
+            
+            var metadata = JsonSerializer.Deserialize<FNFMetadata>(metadataJson);
+            var chart = JsonSerializer.Deserialize<FNFSong>(chartJson);
+            
+            Console.WriteLine($"Read {metadata.songName} by {metadata.artist} with {metadata.playData.difficulties.Count} difficulties.");
+
+            var smFile = new SMFile();
+            smFile.metadata = new SMMetadata();
+            smFile.metadata.title = metadata.songName;
+            smFile.metadata.artist = metadata.artist;
+            smFile.metadata.offset = -metadata.offsets.instrumental / 1000;
+            smFile.metadata.sampleStart = metadata.playData.previewStart / 1000f;
+            smFile.metadata.credit = metadata.charter;
+            smFile.timingPoints = new List<SMTimingPoint>();
+            foreach (var timeChange in metadata.timeChanges)
+            {
+                var timingPoint = new SMTimingPoint
+                {
+                    startBeat = timeChange.b,
+                    bpm = timeChange.bpm,
+                    startTime = timeChange.t / 1000f,
+                    endBeat = Single.PositiveInfinity,
+                    endTime = Single.PositiveInfinity
+                };
+                // Check if theres a time change behind this one, if so, set the end beat and time of the previous time change to this one
+                if (smFile.timingPoints.Count > 0)
+                {
+                    var previous = smFile.timingPoints.Last();
+                    previous.endBeat = timeChange.b;
+                    previous.endTime = timeChange.t / 1000f;
+                }
+                
+                smFile.timingPoints.Add(timingPoint);
+            }
+            
+            smFile.difficulties = new List<SMDifficulty>();
+            
+            
+            foreach (var difficulty in metadata.playData.difficulties)
+            {
+                var smDifficulty = new SMDifficulty
+                {
+                    name = difficulty,
+                    charter = metadata.charter,
+                    type = "dance-double",
+                    notes = []
+                };
+
+                if (!chart.notes.ContainsKey(difficulty))
+                {
+                    Console.WriteLine($"Difficulty {difficulty} not found in chart JSON. Skipping.");
+                    continue;
+                }
+                
+                foreach (var note in chart.notes[difficulty])
+                {
+                    var smNote = new SMNote();
+                    smNote.beat = SnapBeatToGrid(getBeat((float)note.t / 1000f, smFile.timingPoints));
+                    smNote.lane = note.d;
+                    smNote.type = SMNoteType.Tap;
+
+                    if (note.l > 0)
+                    {
+                        smNote.type = SMNoteType.Head;
+                        var tailNote = new SMNote();
+                        tailNote.beat = SnapBeatToGrid(getBeat((float)(note.t + note.l) / 1000f, smFile.timingPoints));
+                        tailNote.lane = note.d;
+                        tailNote.type = SMNoteType.Tail;
+                        smDifficulty.notes.Add(tailNote);
+                    }
+
+                    smDifficulty.notes.Add(smNote);
+                }
+                
+                // sort notes by beat
+                smDifficulty.notes = smDifficulty.notes.OrderBy(n => n.beat).ToList();
+                
+                // convert diff names
+
+                switch (smDifficulty.name)
+                {
+                    case "normal":
+                        smDifficulty.name = "medium";
+                        break;
+                    case "erect":
+                        smDifficulty.name = "challenge";
+                        break;
+                    case "nightmare":
+                        smDifficulty.name = "edit";
+                        break;
+                }
+
+                smFile.difficulties.Add(smDifficulty);
+            }
+
+            outputName = metadata.songName;
+
+            smFile.Save(outputName.ToLower() + ".sm");
+        }
+        
+        public static void Main(string[] args)
+        {
+            if (args.Length < 1)
+            {
+                PrintArgs();
+                return;
+            }
+            
+            // set the current directory to the directory of the executable
+            
+            Environment.CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
+            var inputPath = args[0];
+            string? outputPath = null;
+            var outputName = "";
+
+            if (outputPath != null)
+            {
+                // sanatize it
+                outputName = Path.GetFileNameWithoutExtension(outputPath);
+                outputPath = Path.GetDirectoryName(outputPath);
+            }
+            
+            if (inputPath.EndsWith(".sm", StringComparison.OrdinalIgnoreCase))
+            {
+                // SM to FNF
+                ToFNF(inputPath, outputName, outputPath);
+            }
+            else
+            {
+                // FNF to SM
+                ToSM(inputPath, outputName, outputPath);
             }
 
             Console.WriteLine("Completed!");
