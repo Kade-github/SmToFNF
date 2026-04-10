@@ -20,6 +20,7 @@ https://github.com/user-attachments/assets/b195bb8a-2d78-469b-a7d4-5f07bb1249ff
 - Mines/Fakes (will add custom note type, you must implement it yourself in game tho, sorry)
 - Automatic camera focus (kind of jank)
 - Conversion of every important atribute in the file!
+- **NEW** Converting back to .sm!
 
 ## How to use
 
