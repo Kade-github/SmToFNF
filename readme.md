@@ -1,6 +1,6 @@
 # An FNF Converter for the latest version of the game!
 
-Supported (and tested version of the game): **v0.5.3**
+Supported (and tested version of the game): **v0.8.4**
 
 Metadata Version: **v2.2.4**
 
